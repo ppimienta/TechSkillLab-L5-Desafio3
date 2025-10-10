@@ -16,18 +16,51 @@ public class AdvancedStream {
         loadEmpleados(empleados);
 
         //Top 5 empleados activos con mayor salario
+        Comparator<Empleado> porSalario = Comparator.comparing(empleado -> empleado.getSalario());
 
+        System.out.println("Resultado Top 5");
+        empleados.stream()
+                .filter(empleado -> empleado.getActive())
+                .sorted(porSalario.reversed())
+                .limit(5)
+                .forEach(System.out::println);
+        //System.out.println(empleados);
 
         //Promedio de salario por departamento (usando groupingBy)
+        System.out.println("Resultado prom x Dept");
+        var promXDept = empleados.stream()
+                .collect(Collectors.groupingBy(
+                        Empleado::getDepartamento,
+                        Collectors.averagingDouble(empleado -> empleado.getSalario().doubleValue())
+                ));
+        System.out.println(promXDept);
 
-
+        System.out.println("Estadísticas del salario");
         //Estadísticas generales de salario (usando summarizingDouble)
+        var stats = empleados.stream()
+                .collect(Collectors.summarizingDouble(emp -> emp.getSalario().doubleValue()));
+        System.out.println(stats);
+
+        System.out.println("Empleados activos e inactivos");
 
         //Partición de empleados activos e inactivos
+        var classif = empleados.stream()
+                .collect(Collectors.partitioningBy(Empleado::getActive));
 
+        var classif2 = empleados.stream()
+                .collect(Collectors.partitioningBy(empleado -> empleado.getSalario().doubleValue() > 600));
+
+        System.out.println(classif);
         //ParallelStream
 
-        //Encadenamiento avanzado
+        System.out.println("Composiciones avanzadas");
+        //Encadenamiento avanzado: Composiciones avanzadas
+        empleados.stream()
+                .filter(empleado -> empleado.getGenero().equals("M"))
+                .peek(empleado -> System.out.println("Procesando empleado: " + empleado.getNombre() + empleado.getApellido()))
+                .sorted(Comparator.comparing(Empleado::getFechaIng))
+                .map(empleado -> empleado.getNombre() + " - " + empleado.getDepartamento())
+                .forEach(System.out::println);
 
     }
 

@@ -16,7 +16,7 @@ public class StreamPerfDemo {
                         new BigDecimal("2500"), LocalDate.now(), null, true))
                 .toList();
 
-// SECUENCIAL
+    // SECUENCIAL
         Instant startSeq = Instant.now();
         double avgSeq = empleados.stream()
                 .map(Empleado::getSalario)
@@ -27,7 +27,7 @@ public class StreamPerfDemo {
         System.out.println("Promedio secuencial: " + avgSeq + " en " +
                 Duration.between(startSeq, endSeq).toMillis() + " ms");
 
-// PARALELO
+    // PARALELO
         Instant startPar = Instant.now();
         double avgPar = empleados.parallelStream()
                 .map(Empleado::getSalario)
